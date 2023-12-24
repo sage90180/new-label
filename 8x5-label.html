@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>10x8標籤</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
+  <link rel="stylesheet" href="css/main8x5.css" />
+</head>
+
+<body id="app">
+  <nav class="navbar navbar-light bg-light">
+    <form class="container-fluid justify-content-start">
+      <a href="index.html" class="btn btn-primary">10x15標籤</a>
+    </form>
+  </nav>
+  <div class="row p-3">
+    <div class="alert alert-danger" role="alert">
+      <ul class="mb-md-0">
+        <li>會輸出成顛倒的pdf，這樣才符合標籤卷列印方向。</li>
+      </ul>
+    </div>
+    <div class="col-md-6 col-12 labe-form mb-5">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="d-flex align-items-center mb-2">
+            <label for="" class="me-2">Customer</label>
+            <input class="w-100" type="text" v-model="customer" />
+          </div>
+          <div class="d-flex mb-2">
+            <label for="" class="me-2">Requester/Buyer<br /></label>
+            <textarea class="w-100" id="" cols="30" rows="2" v-model="requester"></textarea>
+          </div>
+          <div class="d-flex mb-2">
+            <label for="" class="me-2">Material Group/Item No./Product<br /></label>
+            <textarea class="w-100" id="" cols="30" rows="5" v-model="material"></textarea>
+          </div>
+          <div class="d-flex align-items-center mb-2">
+            <label for="" class="me-2 text-nowrap">Qty./Unit</label>
+            <input class="w-100" type="text" v-model="qty" />
+          </div>
+          <div class="d-flex align-items-center mb-2">
+            <label for="" class="me-2">ManuFacturer Part No./SKU</label>
+            <input class="w-100" type="text" v-model="manuFacturer" />
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="d-flex align-items-center mb-2">
+            <label for="" class="me-2 text-nowrap">Invoice No.</label>
+            <input class="w-100" type="text" v-model="invoiceNo" />
+          </div>
+          <div class="d-flex align-items-center mb-2">
+            <label for="" class="me-2 text-nowrap">Po No.</label>
+            <textarea class="w-100" id="" cols="30" rows="4" v-model="poNo"></textarea>
+          </div>
+          <div class="d-flex align-items-center mb-2">
+            <label for="" class="me-2">barcode</label>
+            <input class="w-100" type="text" v-model="barcode" />
+          </div>
+          <div class="d-flex align-items-center mb-2">
+            <label for="" class="me-2">貼紙數量</label>
+            <input class="w-100" type="number" id="pages" v-model="amount" />
+          </div>
+          <!-- <div class="d-flex align-items-center mb-2">
+            <label for="" class="me-2">qrCode</label>
+            <input class="w-100" type="text" v-model="qrcode" />
+          </div> -->
+
+        </div>
+      </div>
+      <hr />
+      <button class="btn btn-warning" @click="downloadPDF">
+        正常pdf
+      </button>
+      <button class="btn btn-warning float-end" @click="downloadRotatePDF">
+        顛倒PDF
+      </button>
+    </div>
+    <div class="col-md-6 col-12 label-design__wrap">
+      <div class="label-design" id="label-design">
+        <div class="pattern"></div>
+        <div class="logo">
+          <img src="images/logo.svg" alt="">
+        </div>
+        <div class="row m-0 label-main">
+          <div class="col-6 pt-2 p-2 position-relative">
+            <div style="position: absolute; top: 0px">
+              <div class="label">Customer</div>
+              <b class="info">{{customer}}</b>
+            </div>
+            <div style="position: absolute; top: 60px">
+              <div class="label">Requester / Buyer</div>
+              <b class="info">{{requester}}</b>
+            </div>
+            <div style="position: absolute; top: 120px">
+              <div class="label">Material Group / Item No./ Product</div>
+              <b class="info">{{material}}</b>
+            </div>
+            <div style="position: absolute; top: 240px; display: flex;">
+              <div class="label">Qty./Unit：</div>
+              <b class="info ms-1">{{qty}}</b>
+            </div>
+            <div style="position: absolute; top: 300px">
+              <div class="label">ManuFacturer Part No./ SKU</div>
+              <b class="info">{{manuFacturer}}</b>
+            </div>
+          </div>
+          <div class="col-6 p-1">
+            <div class="right-info">
+              <div style="position: absolute; top: 0px">
+                <div class="label">Invoice No.</div>
+                <b class="info">{{invoiceNo}}</b>
+              </div>
+              <div style="position: absolute; top: 60px; ">
+                <div class="label">PO No.:</div>
+                <b class="info">{{poNo}}</b>
+              </div>
+            </div>
+            <div style="position: absolute; top: 180px; right: 0px;">
+              <canvas class="mb-1" id="barcode"></canvas>
+              <!-- <div class="d-flex">
+                <div id="qrcode"></div>
+                <img class="logo ms-3" src="images/logo.svg" alt="" />
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div>
+    <label for="pages">貼指數：</label>
+    <input type="number" id="pages" placeholder="Number of Pages">
+
+    <button @click="downloadPDF">Generate PDF</button>
+  </div> -->
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+
+  <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous">
+  </script>
+
+  <!-- 引入html2canvas庫 -->
+
+  <script src="js/JsBarcode.all.min.js"></script>
+  <script src="js/jquery.qrcode.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.2.61/jspdf.min.js'></script>
+
+  <!-- 引入html2canvas庫 -->
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+
+  <script>
+    const {
+      createApp,
+      ref
+    } = Vue;
+
+    createApp({
+      data() {
+        return {
+          customer: '',
+          requester: '',
+          material: '',
+          product: '',
+          qty: '',
+          manuFacturer: '',
+          invoiceNo: '',
+          poNo: '',
+          barcode: '123456789012',
+          amount: 1,
+          qrcode: 'http://www.plastlist.com/',
+        };
+      },
+      mounted() {
+        JsBarcode('#barcode', '123456789012', {
+          format: 'upc',
+          height: 60,
+          fontSize: 16,
+        });
+        $('#qrcode').empty('').qrcode({
+          width: 60,
+          height: 60,
+          text: this.qrcode,
+        });
+      },
+      methods: {
+        downloadRotatePDF() {
+          JsBarcode('#barcode', this.barcode, {
+            format: 'upc',
+            height: 60,
+            fontSize: 16,
+          });
+          const pdfWidth = 400; // Default to A4 size
+          const pdfHeight = 250;
+          // const numberOfPages = parseInt(document.getElementById('pages').value) || 1;
+          const numberOfPages = this.amount;
+
+          const pdf = new jsPDF({
+            orientation: 'landscape',
+            unit: 'mm',
+            format: [pdfWidth, pdfHeight],
+          });
+
+          // 取得要轉換成PDF的div
+          // const contentToConvert = document.getElementById('contentToConvert');
+
+          const contentToConvert = document.querySelector('.label-design');
+
+          contentToConvert.style.transform = 'rotate(180deg)';
+          document.querySelector('.pattern').classList.add('hidden')
+          contentToConvert.style.border = 'none';
+
+          // 使用html2canvas將div轉換成PNG圖片
+          html2canvas(contentToConvert, {
+            width: 600, // 设置捕捉区域的宽度
+            height: 370, // 设置捕捉区域的高度
+            scale: 2.5
+          }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+
+            for (let i = 1; i <= numberOfPages; i++) {
+              if (i > 1) {
+                pdf.addPage();
+              }
+              // 添加圖片到PDF
+              pdf.addImage(imgData, 'PNG', 0, 0);
+
+              pdf.text(`${numberOfPages}-${i}`, 30, 10, 180);
+            }
+
+            // Save the PDF and trigger download
+            pdf.save('output.pdf');
+            location.reload()
+          });
+        },
+        downloadPDF() {
+          JsBarcode('#barcode', this.barcode, {
+            format: 'upc',
+            height: 60,
+            fontSize: 16,
+          });
+          const pdfWidth = 400; // Default to A4 size
+          const pdfHeight = 250;
+          // const numberOfPages = parseInt(document.getElementById('pages').value) || 1;
+          const numberOfPages = this.amount;
+
+          const pdf = new jsPDF({
+            orientation: 'landscape',
+            unit: 'mm',
+            format: [pdfWidth, pdfHeight],
+          });
+
+          // 取得要轉換成PDF的div
+          // const contentToConvert = document.getElementById('contentToConvert');
+
+          const contentToConvert = document.querySelector('.label-design');
+
+          document.querySelector('.pattern').classList.add('hidden')
+          contentToConvert.style.border = 'none';
+
+          // 使用html2canvas將div轉換成PNG圖片
+          html2canvas(contentToConvert, {
+            width: 600, // 设置捕捉区域的宽度
+            height: 370, // 设置捕捉区域的高度
+            scale: 2.5
+          }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+
+            for (let i = 1; i <= numberOfPages; i++) {
+              if (i > 1) {
+                pdf.addPage();
+              }
+
+              // 添加圖片到PDF
+              pdf.addImage(imgData, 'PNG', 0, 0);
+
+              // Optionally, add more content to each page
+              // pdf.text('Additional content on page ' + i, 20, 40);
+
+              pdf.text(`${numberOfPages}-${i}`, `${pdfWidth-20}`, `${pdfHeight-10}`, 0);
+            }
+
+            // Save the PDF and trigger download
+            pdf.save('output.pdf');
+            location.reload()
+          });
+        }
+
+      },
+    }).mount('#app');
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+.label-design {
+  width: 400px;
+  height: 800px;
+  border: solid 1px #eee;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 0px;
+  position: relative;
+  padding-left: 70px;
+}
+
+.label-design .pattern {
+  background: #285295;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 60px;
+  z-index: 999;
+}
+
+.label-design .logo {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 200px;
+  z-index: 999;
+}
+
+.right-info {
+  height: 60%;
+}
+
+.logo {
+  max-width: 180px;
+}
+
+.label {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 23px;
+  margin-bottom: 5px;
+}
+
+.info {
+  display: block;
+  font-size: 20px;
+  line-height: 20px;
+  width: 100%;
+}
+
+.labe-form label {
+  width: 250px;
+  background: #f4f4f4;
+  padding: 0px 5px;
+}
+
+.hidden {
+  display: none;
+}
+
+.nav-pills .nav-link {
+  background: #f6f6f6;
+  border-radius: 0px;
+  color: #1f265b;
+}
+
+.nav-pills .nav-link.active {
+  background: #1f265b;
+}
+
+.tab-content {
+  width: 100%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
