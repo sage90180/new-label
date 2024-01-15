@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,MAAM,CAAC;EACL,KAAK,EAAE,KAAK;EACZ,MAAM,EAAG,MAAM;EACf,MAAM,EAAE,aAAa;CAOE;;AAVzB,AAIE,MAJI,CAIJ,CAAC,CAAC;EACA,MAAM,EAAE,aAAa;CAAG;;AAL5B,AAOI,MAPE,CAOD,gBAAE,CAAC;EACF,MAAM,EAAE,IAAI;CAAG;;AARrB,AASI,MATE,CASD,gBAAE,CAAC;EACF,MAAM,EAAE,IAAI;CAAG",
+    "sources": [
+        "../sass/new-style.sass"
+    ],
+    "names": [],
+    "file": "new-style.css"
+}

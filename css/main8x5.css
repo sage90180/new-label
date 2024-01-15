@@ -36,7 +36,7 @@
 }
 
 .label {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 23px;
   margin-bottom: 5px;
@@ -55,10 +55,6 @@
   padding: 0px 5px;
 }
 
-.hidden {
-  display: none;
-}
-
 .nav-pills .nav-link {
   background: #f6f6f6;
   border-radius: 0px;
@@ -71,5 +67,11 @@
 
 .tab-content {
   width: 100%;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
+
+.hidden {
+  display: none !important;
+}
+/*# sourceMappingURL=main8x5.css.map */

@@ -34,12 +34,16 @@
             <textarea class="w-100" id="" cols="30" rows="2" v-model="requester"></textarea>
           </div>
           <div class="d-flex mb-2">
-            <label for="" class="me-2">Material Group/Item No./Product<br /></label>
+            <label for="" class="me-2">Item No./Product<br /></label>
             <textarea class="w-100" id="" cols="30" rows="5" v-model="material"></textarea>
           </div>
           <div class="d-flex align-items-center mb-2">
-            <label for="" class="me-2 text-nowrap">Qty./Unit</label>
+            <label for="" class="me-2 text-nowrap">Qty.</label>
             <input class="w-100" type="text" v-model="qty" />
+          </div>
+          <div class="d-flex align-items-center mb-2">
+            <label for="" class="me-2 text-nowrap">Unit(多少頁)</label>
+            <input class="w-100" type="number" id="pages" v-model="amount" />
           </div>
           <div class="d-flex align-items-center mb-2">
             <label for="" class="me-2">ManuFacturer Part No./SKU</label>
@@ -48,34 +52,34 @@
         </div>
         <div class="col-6">
           <div class="d-flex align-items-center mb-2">
-            <label for="" class="me-2 text-nowrap">Invoice No.</label>
-            <input class="w-100" type="text" v-model="invoiceNo" />
+            <label for="" class="me-2 text-nowrap">Po No.</label>
+            <input class="w-100" type="text" v-model="poNo" />
           </div>
           <div class="d-flex align-items-center mb-2">
-            <label for="" class="me-2 text-nowrap">Po No.</label>
-            <textarea class="w-100" id="" cols="30" rows="4" v-model="poNo"></textarea>
+            <label for="" class="me-2 text-nowrap">Invoice No.</label>
+            <input class="w-100" type="text" v-model="invoiceNo" />
           </div>
           <div class="d-flex align-items-center mb-2">
             <label for="" class="me-2">barcode</label>
             <input class="w-100" type="text" v-model="barcode" />
           </div>
-          <div class="d-flex align-items-center mb-2">
+          <!-- <div class="d-flex align-items-center mb-2">
             <label for="" class="me-2">貼紙數量</label>
             <input class="w-100" type="number" id="pages" v-model="amount" />
-          </div>
-          <!-- <div class="d-flex align-items-center mb-2">
+          </div> -->
+          <div class="d-flex align-items-center mb-2">
             <label for="" class="me-2">qrCode</label>
             <input class="w-100" type="text" v-model="qrcode" />
-          </div> -->
+          </div>
 
         </div>
       </div>
       <hr />
-      <button class="btn btn-warning" @click="downloadPDF">
-        正常pdf
-      </button>
-      <button class="btn btn-warning float-end" @click="downloadRotatePDF">
+      <button class="btn btn-warning" @click="downloadRotatePDF">
         顛倒PDF
+      </button>
+      <button class="btn btn-warning float-end" @click="downloadPDF">
+        正常pdf
       </button>
     </div>
     <div class="col-md-6 col-12 label-design__wrap">
@@ -95,12 +99,14 @@
               <b class="info">{{requester}}</b>
             </div>
             <div style="position: absolute; top: 120px">
-              <div class="label">Material Group / Item No./ Product</div>
-              <b class="info">{{material}}</b>
+              <div class="label">Item No./Product</div>
+              <b v-html="formattedContent(material)"></b>
             </div>
-            <div style="position: absolute; top: 240px; display: flex;">
+            <div style="position: absolute; top: 240px; ">
               <div class="label">Qty./Unit：</div>
-              <b class="info ms-1">{{qty}}</b>
+              <div class="d-flex qty-info">
+                <b class="info ms-1">{{qty}}</b><b class="info ms-1">(1/{{amount}})</b>
+              </div>
             </div>
             <div style="position: absolute; top: 300px">
               <div class="label">ManuFacturer Part No./ SKU</div>
@@ -109,21 +115,18 @@
           </div>
           <div class="col-6 p-1">
             <div class="right-info">
-              <div style="position: absolute; top: 0px">
-                <div class="label">Invoice No.</div>
-                <b class="info">{{invoiceNo}}</b>
-              </div>
-              <div style="position: absolute; top: 60px; ">
+              <div style="position: absolute; top: 0px; ">
                 <div class="label">PO No.:</div>
                 <b class="info">{{poNo}}</b>
               </div>
+              <div style="position: absolute; top: 60px">
+                <div class="label">Invoice No.</div>
+                <b class="info">{{invoiceNo}}</b>
+              </div>
             </div>
-            <div style="position: absolute; top: 180px; right: 0px;">
+            <div style="position: absolute; top: 90px; right: 40px;">
               <canvas class="mb-1" id="barcode"></canvas>
-              <!-- <div class="d-flex">
-                <div id="qrcode"></div>
-                <img class="logo ms-3" src="images/logo.svg" alt="" />
-              </div> -->
+              <div class="" id="qrcode"></div>
             </div>
           </div>
         </div>
@@ -174,6 +177,7 @@
           material: '',
           product: '',
           qty: '',
+          unit: '',
           manuFacturer: '',
           invoiceNo: '',
           poNo: '',
@@ -184,8 +188,8 @@
       },
       mounted() {
         JsBarcode('#barcode', '123456789012', {
-          format: 'upc',
-          height: 60,
+          format: 'CODE128',
+          height: 80,
           fontSize: 16,
         });
         $('#qrcode').empty('').qrcode({
@@ -195,16 +199,20 @@
         });
       },
       methods: {
+        formattedContent(text) {
+          // 将换行符替换为 <br> 标签
+          return text.replace(/\n/g, "<br>");
+        },
         downloadRotatePDF() {
           JsBarcode('#barcode', this.barcode, {
-            format: 'upc',
-            height: 60,
+            format: 'CODE128',
+            height: 80,
             fontSize: 16,
           });
           const pdfWidth = 400; // Default to A4 size
           const pdfHeight = 250;
-          // const numberOfPages = parseInt(document.getElementById('pages').value) || 1;
           const numberOfPages = this.amount;
+          const qty = this.qty;
 
           const pdf = new jsPDF({
             orientation: 'landscape',
@@ -246,14 +254,15 @@
         },
         downloadPDF() {
           JsBarcode('#barcode', this.barcode, {
-            format: 'upc',
-            height: 60,
+            format: 'CODE128',
+            height: 80,
             fontSize: 16,
           });
           const pdfWidth = 400; // Default to A4 size
           const pdfHeight = 250;
           // const numberOfPages = parseInt(document.getElementById('pages').value) || 1;
           const numberOfPages = this.amount;
+          const qty = this.qty;
 
           const pdf = new jsPDF({
             orientation: 'landscape',
@@ -266,8 +275,11 @@
 
           const contentToConvert = document.querySelector('.label-design');
 
+
           document.querySelector('.pattern').classList.add('hidden')
+          document.querySelector('.qty-info').classList.add('hidden')
           contentToConvert.style.border = 'none';
+
 
           // 使用html2canvas將div轉換成PNG圖片
           html2canvas(contentToConvert, {
@@ -288,7 +300,8 @@
               // Optionally, add more content to each page
               // pdf.text('Additional content on page ' + i, 20, 40);
 
-              pdf.text(`${numberOfPages}-${i}`, `${pdfWidth-20}`, `${pdfHeight-10}`, 0);
+              pdf.setFontSize(44).setFont(undefined, 'bold');
+              pdf.text(`${qty} (${i}/${numberOfPages})`, 50, `${pdfHeight-60}`, 0);
             }
 
             // Save the PDF and trigger download
