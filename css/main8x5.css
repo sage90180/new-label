@@ -8,7 +8,6 @@
   position: relative;
   padding-left: 70px;
 }
-
 .label-design .pattern {
   background: #285295;
   position: absolute;
@@ -18,7 +17,6 @@
   width: 60px;
   z-index: 999;
 }
-
 .label-design .logo {
   position: absolute;
   right: 10px;
@@ -60,18 +58,19 @@
   border-radius: 0px;
   color: #1f265b;
 }
-
 .nav-pills .nav-link.active {
   background: #1f265b;
 }
 
 .tab-content {
   width: 100%;
-  -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-          box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+#barcode {
+  max-width: 280px;
 }
 
 .hidden {
   display: none !important;
-}
-/*# sourceMappingURL=main8x5.css.map */
+}/*# sourceMappingURL=main8x5.css.map */

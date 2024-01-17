@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>10x8標籤</title>
+  <title>8x5標籤</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
   <link rel="stylesheet" href="css/main8x5.css" />
@@ -13,13 +13,13 @@
 <body id="app">
   <nav class="navbar navbar-light bg-light">
     <form class="container-fluid justify-content-start">
-      <a href="index.html" class="btn btn-primary">10x15標籤</a>
+      <a href="index.html" class="btn btn-primary">換10x15標籤</a>
     </form>
   </nav>
   <div class="row p-3">
     <div class="alert alert-danger" role="alert">
       <ul class="mb-md-0">
-        <li>會輸出成顛倒的pdf，這樣才符合標籤卷列印方向。</li>
+        <li>列印方法</li>
       </ul>
     </div>
     <div class="col-md-6 col-12 labe-form mb-5">
@@ -55,13 +55,13 @@
             <label for="" class="me-2 text-nowrap">Po No.</label>
             <input class="w-100" type="text" v-model="poNo" />
           </div>
-          <div class="d-flex align-items-center mb-2">
+          <!-- <div class="d-flex align-items-center mb-2">
             <label for="" class="me-2 text-nowrap">Invoice No.</label>
             <input class="w-100" type="text" v-model="invoiceNo" />
-          </div>
+          </div> -->
           <div class="d-flex align-items-center mb-2">
-            <label for="" class="me-2">barcode</label>
-            <input class="w-100" type="text" v-model="barcode" />
+            <label for="" class="me-2">Invoice No.</label>
+            <input class="w-100" type="text" v-model="barcode" @input="generateBarcode" />
           </div>
           <!-- <div class="d-flex align-items-center mb-2">
             <label for="" class="me-2">貼紙數量</label>
@@ -75,11 +75,11 @@
         </div>
       </div>
       <hr />
-      <button class="btn btn-warning" @click="downloadRotatePDF">
-        顛倒PDF
+      <button class="btn btn-danger" @click="clearData">
+        清空
       </button>
       <button class="btn btn-warning float-end" @click="downloadPDF">
-        正常pdf
+        下載Pdf
       </button>
     </div>
     <div class="col-md-6 col-12 label-design__wrap">
@@ -117,29 +117,23 @@
             <div class="right-info">
               <div style="position: absolute; top: 0px; ">
                 <div class="label">PO No.:</div>
-                <b class="info">{{poNo}}</b>
+                <b class="info fs-3">{{poNo}}</b>
               </div>
               <div style="position: absolute; top: 60px">
                 <div class="label">Invoice No.</div>
-                <b class="info">{{invoiceNo}}</b>
+                <!-- <b class="info">{{invoiceNo}}</b> -->
               </div>
             </div>
-            <div style="position: absolute; top: 90px; right: 40px;">
+            <div style="position: absolute; top: 100px; right: 0px;">
               <canvas class="mb-1" id="barcode"></canvas>
-              <div class="" id="qrcode"></div>
             </div>
+
+            <div class="" id="qrcode" style="position: absolute; bottom: 20px; right: 200px;"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- <div>
-    <label for="pages">貼指數：</label>
-    <input type="number" id="pages" placeholder="Number of Pages">
-
-    <button @click="downloadPDF">Generate PDF</button>
-  </div> -->
 
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
@@ -177,82 +171,76 @@
           material: '',
           product: '',
           qty: '',
-          unit: '',
           manuFacturer: '',
           invoiceNo: '',
           poNo: '',
-          barcode: '123456789012',
+          barcode: 'CODE128912345678',
           amount: 1,
           qrcode: 'http://www.plastlist.com/',
         };
       },
       mounted() {
-        JsBarcode('#barcode', '123456789012', {
+        JsBarcode('#barcode', 'CODE128912345678', {
           format: 'CODE128',
-          height: 80,
+          height: 100,
+          with: 1,
           fontSize: 16,
         });
         $('#qrcode').empty('').qrcode({
-          width: 60,
-          height: 60,
+          width: 90,
+          height: 90,
           text: this.qrcode,
         });
       },
+      created() {
+        this.loadDataFromLocalStorage();
+      },
       methods: {
+        clearData() {
+          this.customer = ''
+          this.requester = ''
+          this.material = ''
+          this.product = ''
+          this.qty = ''
+          this.manuFacturer = ''
+          this.invoiceNo = ''
+          this.poNo = ''
+        },
+        loadDataFromLocalStorage() {
+          const data = localStorage.getItem('my5x8LabelData');
+          if (data) {
+            const parsedData = JSON.parse(data);
+            Object.assign(this.$data, parsedData);
+          }
+        },
         formattedContent(text) {
           // 将换行符替换为 <br> 标签
           return text.replace(/\n/g, "<br>");
         },
-        downloadRotatePDF() {
+        generateBarcode() {
           JsBarcode('#barcode', this.barcode, {
             format: 'CODE128',
-            height: 80,
+            height: 100,
             fontSize: 16,
-          });
-          const pdfWidth = 400; // Default to A4 size
-          const pdfHeight = 250;
-          const numberOfPages = this.amount;
-          const qty = this.qty;
-
-          const pdf = new jsPDF({
-            orientation: 'landscape',
-            unit: 'mm',
-            format: [pdfWidth, pdfHeight],
-          });
-
-          // 取得要轉換成PDF的div
-          // const contentToConvert = document.getElementById('contentToConvert');
-
-          const contentToConvert = document.querySelector('.label-design');
-
-          contentToConvert.style.transform = 'rotate(180deg)';
-          document.querySelector('.pattern').classList.add('hidden')
-          contentToConvert.style.border = 'none';
-
-          // 使用html2canvas將div轉換成PNG圖片
-          html2canvas(contentToConvert, {
-            width: 600, // 设置捕捉区域的宽度
-            height: 370, // 设置捕捉区域的高度
-            scale: 2.5
-          }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-
-            for (let i = 1; i <= numberOfPages; i++) {
-              if (i > 1) {
-                pdf.addPage();
-              }
-              // 添加圖片到PDF
-              pdf.addImage(imgData, 'PNG', 0, 0);
-
-              pdf.text(`${numberOfPages}-${i}`, 30, 10, 180);
-            }
-
-            // Save the PDF and trigger download
-            pdf.save('output.pdf');
-            location.reload()
+            with: 1,
           });
         },
         downloadPDF() {
+          const dataToSave = {
+            customer: this.customer,
+            requester: this.requester,
+            material: this.material,
+            product: this.product,
+            qty: this.qty,
+            manuFacturer: this.manuFacturer,
+            invoiceNo: this.invoiceNo,
+            poNo: this.poNo,
+            barcode: this.barcode,
+            amount: this.amount,
+            qrcode: this.qrcode,
+          };
+          localStorage.setItem('my5x8LabelData', JSON.stringify(dataToSave));
+
           JsBarcode('#barcode', this.barcode, {
             format: 'CODE128',
             height: 80,
